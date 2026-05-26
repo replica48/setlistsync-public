@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{userId} {
+      allow read, update, delete: if request.auth.uid == userId;
+      allow create: if request.auth != null;
+    }
+
+    // --- HELPER FUNCTIONS ---
+    function isBandLeader(bandId) {
+      let memberDocPath = /databases/$(database)/documents/bands/$(bandId)/members/$(request.auth.uid);
+      return exists(memberDocPath) && get(memberDocPath).data.role == 'Leader';
+    }
+
+    function isBandEditor(bandId) {
+      let memberDocPath = /databases/$(database)/documents/bands/$(bandId)/members/$(request.auth.uid);
+      return exists(memberDocPath) && get(memberDocPath).data.role in ['Leader', 'Member'];
+    }
+
+    function isBandMember(bandId) {
+      let memberDocPath = /databases/$(database)/documents/bands/$(bandId)/members/$(request.auth.uid);
+      return exists(memberDocPath);
+    }
+
+    function isLiveConductor(bandId) {
+      let band = get(/databases/$(database)/documents/bands/$(bandId)).data;
+      return request.auth.uid == band.liveState.liveConductorUid;
+    }
+
+    function isLeavingUser(bandId) {
+      let existingCount = resource.data.get('memberCount', 0);
+      let isDecrementing = request.resource.data.memberCount == existingCount - 1;
+      let allowedKeys = ['memberCount', 'leaders', 'ownerId'];
+      return isBandMember(bandId) &&
+            isDecrementing &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedKeys);
+    }
+
+    function isJoiningUserIncrementingMemberCount(bandId) {
+      let existingCount = resource.data.get('memberCount', 0);
+      return request.auth != null &&
+        (request.resource.data.memberCount == existingCount + 1 &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberCount']));
+    }
+
+    // --- DOCUMENT RULES ---
+    match /bands/{bandId} {
+      allow read: if request.auth != null;
+
+      match /notes/{noteId} {
+        allow read: if isBandEditor(bandId);
+        allow write: if isBandEditor(bandId);
+      }
+
+      allow update: if isBandEditor(bandId) ||
+               isJoiningUserIncrementingMemberCount(bandId) ||
+               isLeavingUser(bandId);
+
+      allow delete: if isBandLeader(bandId) || resource.data.ownerId == request.auth.uid;
+
+      allow create: if request.auth != null &&
+                       request.resource.data.ownerId == request.auth.uid &&
+                       request.resource.data.memberCount == 1;
+    }
+
+    match /bands/{bandId}/members/{memberId} {
+      allow get: if request.auth.uid == memberId;
+      allow list: if isBandEditor(bandId);
+
+      allow create: if request.auth != null &&
+                       request.auth.uid == memberId &&
+                       (request.resource.data.role == 'Member' || request.resource.data.role == 'Leader');
+
+      allow update: if request.auth.uid == memberId || isBandLeader(bandId) || isLiveConductor(bandId);
+      allow delete: if request.auth.uid == memberId || isBandLeader(bandId);
+    }
+
+    match /bands/{bandId}/songs/{songId} {
+      allow read: if isBandMember(bandId);
+      allow write: if isBandEditor(bandId);
+    }
+
+    match /bandInvites/{inviteId} {
+      allow read, delete: if request.auth != null;
+
+      allow create: if isBandLeader(request.resource.data.bandId);
+      allow update: if (isBandLeader(request.resource.data.bandId)) ||
+                       (request.auth != null &&
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['useCount', 'status']));
+    }
+  }
+}

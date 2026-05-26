@@ -1,0 +1,26 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /bands/{bandId}/{songId}/{fileName} {
+
+      function isBandEditor() {
+        return request.auth.token.activeBandId == bandId &&
+               request.auth.token.bandRole in ['Leader', 'Member'];
+      }
+
+      function isBandMember() {
+        return request.auth.token.activeBandId == bandId;
+      }
+
+      allow read: if isBandMember();
+
+      allow delete: if isBandEditor();
+
+      allow write: if isBandEditor() &&
+                      request.resource.size < 50 * 1024 * 1024 &&
+                      request.resource.contentType in ['application/pdf', 'text/plain'] &&
+                      (request.auth.token.storageUsed + request.resource.size <= request.auth.token.storageQuota);
+    }
+  }
+}

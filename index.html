@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/setlistsynclogo_32px.png" type="image/png">
+    <link rel="apple-touch-icon" href="/setlistsynclogo_180px.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-site-verification" content="qVbFSN2GXl9o4hGuqxPXehO3omCVO91Ab_2vCJAKv4o" />
+    <title>SetlistSync</title>
+
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Source+Code+Pro&family=Inconsolata&family=Ubuntu+Mono&display=swap" rel="stylesheet">
+    
+    <meta name="theme-color" content="#0ea5e9" />
+
+  </head>
+  <body>
+    <div id="root"></div>
+    <script async type="text/javascript" src="https://www.scales-chords.com/api/scales-chords-api.js"></script>
+    <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(err => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
