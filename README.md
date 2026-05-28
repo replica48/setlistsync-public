@@ -1,12 +1,12 @@
 # SetlistSync
 
-A real-time band collaboration app for managing songs, setlists, and live performances. Self-host on your own Firebase project.
+A real-time band collaboration app for managing songs, setlists, and live performances. Self-host on your own Firebase project. Visit [SetlistSync](https://www.setlistsync.com) site for demo.
 
 ---
 
 ## What it does
 
-SetlistSync keeps bands in sync — literally. A designated conductor controls song navigation during rehearsals and performances, and every member's screen updates in real time. Outside of live mode, the app serves as a shared song library and setlist manager.
+[SetlistSync](https://www.setlistsync.com) keeps bands in sync — literally. A designated conductor controls song navigation during rehearsals and performances, and every member's screen updates in real time. Outside of live mode, the app serves as a shared song library and setlist manager.
 
 **Core features:**
 - **Live mode** — conductor-led setlist navigation with member ready-states and tempo alerts, synced across all devices in real time
