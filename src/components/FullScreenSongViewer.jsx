@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { doc, updateDoc } from "firebase/firestore";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { getMetadata, ref } from "firebase/storage";
 import PianoIcon from "@mui/icons-material/Piano";
 import {
@@ -356,7 +355,7 @@ function FullScreenSongViewer({
   // --- NEW: State to control the visibility of the chord bar ---
   const isProTier = true;
   const [selectedVoicingIndex, setSelectedVoicingIndex] = useState(0);
-  const [pianoInversions, setPianoInversions] = useState([]);
+  const [, setPianoInversions] = useState([]);
   const endOfSongRef = useRef(null);
   const [isChordBarVisible, setIsChordBarVisible] = useState(false);
   // --- NEW: State to control the instrument type for diagrams ---

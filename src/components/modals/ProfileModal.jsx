@@ -11,10 +11,10 @@ function ProfileModal({
     handleAttemptLeave,
     handleDeleteAccount
     }) {
-    if (!isOpen) return null;
-
     const [isEditingName, setIsEditingName] = useState(false);
     const [newName, setNewName] = useState(memberName || '');
+
+    if (!isOpen) return null;
 
     const handleNameUpdate = (e) => {
         e.preventDefault();

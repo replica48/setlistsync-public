@@ -12,16 +12,13 @@ import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
-import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
+import { $generateNodesFromDOM } from '@lexical/html';
 import { TRANSFORMERS } from '@lexical/markdown';
 import { $patchStyleText, $getSelectionStyleValueForProperty } from '@lexical/selection';
-import { isHTMLElement } from '@lexical/utils';
 import {
-    $createTextNode,
     $getSelection,
     $getRoot,
     $isRangeSelection,
-    $isTextNode,
     FORMAT_TEXT_COMMAND,
     REDO_COMMAND,
     SELECTION_CHANGE_COMMAND,
@@ -262,7 +259,7 @@ const LexicalEditor = memo(function LexicalEditor({ initialContent, onChange, pl
                         placeholder={<div className="absolute top-4 left-4 text-gray-500 pointer-events-none">{placeholder}</div>}
                         ErrorBoundary={LexicalErrorBoundary}
                     />
-                    <OnChangePlugin onChange={(editorState, editor) => {
+                    <OnChangePlugin onChange={(editorState) => {
                         const jsonString = JSON.stringify(editorState.toJSON());
                         onChange(jsonString);
                     }} />

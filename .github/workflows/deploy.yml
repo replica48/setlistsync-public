@@ -1,5 +1,5 @@
 # .github/workflows/deploy.yml
-# Deploys to Firebase on push to main.
+# Lints, tests, builds, then deploys to Firebase on push to main.
 #
 # Required GitHub secrets (Settings → Secrets → Actions):
 #   VITE_FIREBASE_API_KEY
@@ -12,16 +12,19 @@
 #   CRYPTO_SECRET          — random secret for offline data HMAC signing
 #   GCP_SA_KEY             — Firebase service account JSON (project settings → Service accounts)
 
-name: Build and Deploy to Firebase
+name: Test, Build, and Deploy to Firebase
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
-    name: Build and Deploy
+  test:
+    name: Lint and Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -31,6 +34,37 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+
+      - name: Install Root Dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run Frontend Unit Tests
+        run: npm run test:run
+
+      - name: Install Functions Dependencies
+        run: npm ci --prefix functions
+
+      - name: Run Functions Unit Tests
+        run: npm test --prefix functions
+
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
 
       - name: Install Root Dependencies
         run: npm ci
@@ -52,8 +86,12 @@ jobs:
       - name: Create .env file for Firebase Functions
         run: echo "CRYPTO_SECRET=${{ secrets.CRYPTO_SECRET }}" > functions/.env
 
+      # Pinned to a specific commit SHA instead of @master to prevent supply
+      # chain attacks — a compromised @master tag would run with your GCP_SA_KEY.
+      # To update: check https://github.com/w9jds/firebase-action/commits/master
+      # for the latest commit SHA and replace the value below.
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+        uses: w9jds/firebase-action@a95a1d1dfeea8f7efbe0eb13fd3bf429cb4ac437
         with:
           args: deploy --project default
         env:

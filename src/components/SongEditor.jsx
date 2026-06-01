@@ -21,12 +21,7 @@ function SongEditor({
   onSave,
   onCancel,
   allSongs,
-  bandData = {},
-  storage,
-  user,
   showToast,
-  refreshAuthToken,
-  isOffline = false,
 }) {
   const [title, setTitle] = useState(song.title || "");
 

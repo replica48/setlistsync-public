@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   doc,
   updateDoc,
@@ -18,11 +18,9 @@ function MembersView({
   bandData,
   user,
   db,
-  auth,
   isLeader,
   members,
   canEdit,
-  userRole,
   isOffline,
   handleCreateOfflineData,
   cachedBandIds = new Set(),
@@ -32,23 +30,21 @@ function MembersView({
   storage,
   showToast,
   showConfirmation,
-  handleDeleteAccount,
   setIsSidebarCollapsed,
   handleAttemptLeave,
-  handleDowngradeAttempt,
   signalBandDeletion,
 }) {
   // --- State Variables (Keep all existing state) ---
   const [isEditingName, setIsEditingName] = useState(false);
   const [newBandName, setNewBandName] = useState(bandData.name);
-  const [isEditingMyName, setIsEditingMyName] = useState(false);
+  const [, setIsEditingMyName] = useState(false);
   const [showManagerModal, setShowManagerModal] = useState(false);
   const myName = members.find((m) => m.id === user.uid)?.name || "";
-  const [newMyName, setNewMyName] = useState(myName);
+  const [newMyName] = useState(myName);
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
 
-  const formatBytes = (bytes, decimals = 2) => {
+  const formatBytes = (bytes, decimals = 2) => { // eslint-disable-line no-unused-vars
     if (!bytes || bytes === 0) return "0 Bytes";
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
@@ -116,7 +112,7 @@ function MembersView({
     });
     setIsEditingName(false);
   };
-  const handleUpdateMyName = async (e) => {
+  const handleUpdateMyName = async (e) => { // eslint-disable-line no-unused-vars
     e.preventDefault();
     if (!newMyName.trim()) return;
     if (isOffline) {
@@ -181,7 +177,7 @@ function MembersView({
   const activeMembers = members.sort((a, b) => a.name.localeCompare(b.name));
   const storageUsed = bandData.storageUsed || 0;
   const storageQuota = bandData.storageQuota || 524288000; // 500 MB default
-  const usagePercent = Math.min(100, (storageUsed / storageQuota) * 100);
+  const usagePercent = Math.min(100, (storageUsed / storageQuota) * 100); // eslint-disable-line no-unused-vars
 
   // --- NEW: JSX Structure ---
   return (

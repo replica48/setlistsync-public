@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import {
   doc,
   updateDoc,
-  writeBatch,
-  serverTimestamp,
   getDoc,
   collection,
   query,
@@ -105,15 +103,15 @@ function LiveView({
   user,
   db,
   isLiveConductor,
-  canEdit,
+  canEdit, // eslint-disable-line no-unused-vars
   members,
   userRole,
   keepScreenOn,
   setKeepScreenOn,
-  storage,
+  storage, // eslint-disable-line no-unused-vars
   setIsSidebarCollapsed,
   showToast,
-  songToView,
+  songToView, // eslint-disable-line no-unused-vars
   setSongToView,
   handleSongNav,
   handleJumpToSong,
@@ -141,9 +139,9 @@ function LiveView({
   const [isEditingLayout, setIsEditingLayout] = useState(false);
   const [sectionLayout, setSectionLayout] = useState([]);
   const originalLayout = useRef([]); // To store layout on edit start
-  const draggedSectionId = useRef(null);
-  const longPressTimeoutRef = useRef(null); // For touch-and-hold
-  const touchDragInfo = useRef(null); // For touch drag state
+  const draggedSectionId = useRef(null); // eslint-disable-line no-unused-vars
+  const longPressTimeoutRef = useRef(null); // eslint-disable-line no-unused-vars
+  const touchDragInfo = useRef(null); // eslint-disable-line no-unused-vars
   const layoutContainerRef = useRef(null); // Ref for the main layout container
   const [showAddSectionMenu, setShowAddSectionMenu] = useState(false);
   const [notes, setNotes] = useState([]); // NEW: State to hold fetched notes
@@ -273,7 +271,7 @@ function LiveView({
     });
   };
 
-  const handleViewLyrics = (e) => {
+  const handleViewLyrics = (_e) => {
     // Always open the viewer for the current song (lyrics view by default)
     if (currentSong) {
       setSongToView({ song: currentSong, pdf: null });
@@ -292,7 +290,7 @@ function LiveView({
   const currentSongIndex = bandData.liveState.currentSongIndex;
   let currentSong = null;
   let nextSong = null;
-  let previousSong = null; // NEW: Variable for the previous song
+  let __previousSong = null;
   let nextNextSong = null; // NEW: Variable for the song after next
 
   if (activeSetlist) {
@@ -311,9 +309,9 @@ function LiveView({
       // NEW: Get the previous song
       const prevSongId = activeSetlist.songOrder[currentSongIndex - 1];
       if (prevSongId === "BREAK_ITEM") {
-        previousSong = { id: "BREAK_ITEM", title: "Break" };
+        _previousSong = { id: "BREAK_ITEM", title: "Break" };
       } else {
-        previousSong = bandData.songs?.find((s) => s.id === prevSongId);
+        _previousSong = bandData.songs?.find((s) => s.id === prevSongId);
       }
     }
     if (currentSongIndex + 1 < activeSetlist.songOrder.length) {

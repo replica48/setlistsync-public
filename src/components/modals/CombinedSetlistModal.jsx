@@ -1,10 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  doc,
-  updateDoc,
-  writeBatch,
-  serverTimestamp,
-} from "firebase/firestore";
+import { useState, useRef, useCallback } from "react";
 import Modal from "./Modal";
 import Spinner from "../ui/Spinner"; // Assuming a Spinner component
 import LexicalEditor from "../ui/LexicalEditor"; // --- THIS IS THE FIX: Import the Lexical Editor ---
@@ -30,7 +24,6 @@ function CombinedSetlistModal({
   onSongSelected, // NEW: Callback when a song/pdf is selected for viewing
   showToast,
   db, // Firestore instance
-  user, // Current user
   isOffline, // NEW: Prop to indicate offline status
 }) {
   const [editedSongOrder, setEditedSongOrder] = useState(

@@ -59,8 +59,8 @@ function $createImageNode(src, altText) {
     return new ImageNode(src, altText);
 }
 
-function $isImageNode(node) {
-    return node instanceof ImageNode;
+function $isImageNode(_node) { // eslint-disable-line no-unused-vars
+    return _node instanceof ImageNode;
 }
 
 // --- 2. Define the Command to Insert an Image ---

@@ -15,7 +15,6 @@ function BandSelectionScreen({
   user,
   userData,
   db,
-  storage,
   error,
   infoMessage,
   isOfflineMode,

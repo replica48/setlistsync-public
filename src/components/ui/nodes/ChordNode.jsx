@@ -1,5 +1,5 @@
 import { addClassNamesToElement } from '@lexical/utils';
-import { $applyNodeReplacement, createCommand, TextNode } from 'lexical';
+import { createCommand, TextNode } from 'lexical';
 import { Chord } from 'tonal';
 
 /**

@@ -8,7 +8,7 @@ import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { $generateNodesFromDOM } from '@lexical/html';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect, useMemo } from 'react';
-import { $getRoot, $createParagraphNode, TextNode, $createTextNode, $isTextNode } from 'lexical';
+import { $getRoot, $createParagraphNode, TextNode, $createTextNode } from 'lexical';
 import { CodeNode } from '@lexical/code';
 import { ImageNode } from './ImagePlugin';
 import { ChordNode, $createChordNode, $isChordNode, CHORD_CLICK_COMMAND } from './nodes/ChordNode.jsx';

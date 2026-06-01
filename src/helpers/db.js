@@ -9,7 +9,7 @@ const DB_VERSION = 3;
 // Initializes the database
 async function initDB() {
   const db = await openDB(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion, newVersion, transaction) {
+    upgrade(db, oldVersion, _newVersion, _transaction) {
       
       // --- YOUR CORRECTED LOGIC ---
       // This will run for any user who has a version *less than* the current DB_VERSION

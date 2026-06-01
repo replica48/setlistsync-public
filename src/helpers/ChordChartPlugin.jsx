@@ -7,7 +7,7 @@ import {
     $isNodeSelection,
     $getNodeByKey,
 } from "lexical";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from 'react-dom';
 import chords from '@tombatossals/chords-db/src/db.js';
 import Chord from "@tombatossals/react-chords/lib/Chord";
@@ -101,14 +101,14 @@ class ChordNode extends DecoratorNode {
         };
     }
 
-    createDOM(config) {
+    createDOM(_config) {
         const span = document.createElement('span');
         span.className = 'user-select-none cursor-pointer font-bold text-blue-600';
         span.style.margin = '0 2px';
         return span;
     }
 
-    updateDOM(prevNode, dom, config) {
+    updateDOM(_prevNode, _dom, _config) {
         // Returning false tells Lexical that this node does not need its
         // DOM element replacing with a new copy from createDOM.
         return false; 
@@ -183,10 +183,6 @@ function ChordTooltip({ editor, nodeKey }) {
     );
 }
 
-function useChordTooltips(editor) {
-    // This would contain the logic to show/hide tooltips on click
-    // For brevity, we will add this logic directly into the main plugin component
-}
 
 // --- 3. Create the Plugin ---
 export default function ChordPlugin() {
@@ -216,7 +212,7 @@ export default function ChordPlugin() {
         );
 
         // --- NEW: Click handler to show/hide tooltips ---
-        const handleClick = (event) => {
+        const handleClick = (_event) => {
             editor.getEditorState().read(() => {
                 const selection = $getSelection();
                 if ($isNodeSelection(selection)) {

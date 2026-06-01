@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import {
   getFunctions,
   httpsCallable,
-  connectFunctionsEmulator,
 } from "firebase/functions";
 import {
   getFirestore,
@@ -23,8 +22,6 @@ import {
   serverTimestamp,
   runTransaction,
   increment,
-  connectFirestoreEmulator,
-  getDocFromServer,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -32,13 +29,11 @@ import {
   signOut,
   signInWithCustomToken,
   deleteUser,
-  connectAuthEmulator,
 } from "firebase/auth";
 import {
   getStorage,
   ref,
   getMetadata,
-  connectStorageEmulator,
 } from "firebase/storage";
 import ConfirmationModal from "./components/modals/ConfirmationModal";
 import Spinner from "./components/ui/Spinner";
@@ -164,7 +159,7 @@ export default function App() {
   const [nudgerName, setNudgerName] = useState(null);
   const nudgeTimeoutRef = useRef(null);
   const lastNudgeTimestampRef = useRef(null);
-  const [emailInviteToShow, setEmailInviteToShow] = useState(null);
+  useState(null); // emailInviteToShow — reserved for future invite prompt feature
   const [showOwnerModal, setShowOwnerModal] = useState(false);
   const [keepScreenOn, setKeepScreenOn] = useState(() => {
     // Use React.useState
@@ -177,7 +172,7 @@ export default function App() {
   // --- MOVED: State for Manager Modal (needed for leave logic) ---
   const [isOfflineMode, setIsOfflineMode] = useState(false);
   const [offlineBandName, setOfflineBandName] = useState("");
-  const [cachedBandId, setCachedBandId] = useState(null);
+  const [, setCachedBandId] = useState(null);
   const [cachedBandIds, setCachedBandIds] = useState(new Set());
   const [isAutoOffline, setIsAutoOffline] = useState(false); // NEW: To track if offline mode was triggered automatically
   const [isOnlineAvailable, setIsOnlineAvailable] = useState(false); // NEW: To show reconnection toggle
@@ -717,7 +712,7 @@ export default function App() {
   useEffect(() => {
     const offlineDataString = localStorage.getItem("setlistsync_offline_data");
     if (offlineDataString) {
-      const { bandData, userData } = JSON.parse(offlineDataString);
+      const { bandData } = JSON.parse(offlineDataString);
       setOfflineBandName(bandData.name);
       setCachedBandId(bandData.id);
     }
@@ -967,7 +962,7 @@ export default function App() {
       let songsToImport = [];
       if (backupData && backupData.songs) {
         songsToImport = backupData.songs.map((song) => {
-          const { pdfs, ...songWithoutPdfs } = song;
+          const { pdfs: _pdfs, ...songWithoutPdfs } = song;
           return { ...songWithoutPdfs, pdfs: [] };
         });
       }
@@ -1489,14 +1484,6 @@ export default function App() {
   // --- Simplified userRole check ---
   const userRole = currentUserMemberData?.role || "Viewer";
 
-  // This provides the titles for your new mobile header
-  const viewTitles = {
-    live: "Live",
-    songs: "Songs & Sets",
-    notes: "Notes",
-    members: "Settings",
-  };
-  const currentTitle = viewTitles[currentView];
 
   // We'll pass this function to the sidebar to let it close itself
   const closeSidebar = () => setIsSidebarCollapsed(true);
@@ -1674,7 +1661,7 @@ export default function App() {
                           previousSong={previousSong}
                           nextSong={nextSong}
                           members={members}
-                          onSaveSetlist={(order, newSongs, jumpToIndex, jumpToPdf = null) =>
+                          onSaveSetlist={(order, newSongs, jumpToIndex, _jumpToPdf = null) =>
                             handleSaveSetlistChanges(
                               order,
                               newSongs,

@@ -21,7 +21,7 @@ function PracticeView({
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentPdf, setCurrentPdf] = useState(null);
   const [songForSelection, setSongForSelection] = useState(null);
-  const [songSortOrder, setSongSortOrder] = useState("alpha-asc");
+  useState("alpha-asc"); // songSortOrder — sort UI not yet implemented
 
   const sortedSongs = useMemo(() => {
     return [...(bandData.songs || [])].sort((a, b) =>
